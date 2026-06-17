@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit Feedback – Project Voice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.95);
+      --border: rgba(148, 163, 184, 0.25);
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+      --danger: #f87171;
+      --success: #4ade80;
+      --radius: 14px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .feedback-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .feedback-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(129,140,248,0.3);
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+      background: linear-gradient(to right, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .form-group {
+      margin-bottom: 1.6rem;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.25);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+    .char-counter {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.3rem;
+      transition: color 0.2s;
+    }
+    .char-counter.warning {
+      color: var(--danger);
+      font-weight: 600;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+      border: none;
+      border-radius: var(--radius);
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.8rem;
+      box-shadow: 0 4px 15px rgba(129,140,248,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(129,140,248,0.6);
+    }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .status-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      animation: fadeSlideUp 0.3s ease;
+    }
+    .status-box.success {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(74, 222, 128, 0.5);
+      display: flex;
+    }
+    .status-box.error {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(248, 113, 113, 0.5);
+      display: flex;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 480px) {
+      .feedback-card { padding: 1.5rem; }
+      h1 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="feedback-card">
+    <h1>Report a Bug / Feedback</h1>
+    <p class="subtitle">Your identity will remain private. Only the admin can see your submission.</p>
+
+    <!-- Name field -->
+    <div class="form-group">
+      <label for="fullName">Your Name</label>
+      <input type="text" id="fullName" placeholder="e.g., Manoj Prashad Bhatta (BSC CSIT)" maxlength="80" autocomplete="name">
+    </div>
+
+    <!-- Feedback/Bug field -->
+    <div class="form-group">
+      <label for="feedbackMsg">Core Feedback / Bug</label>
+      <textarea id="feedbackMsg" placeholder="Describe the issue or feedback clearly..." maxlength="600"></textarea>
+      <div class="char-counter" id="charCounter">0 / 600</div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">Submit</button>
+    <div class="status-box" id="statusBox"></div>
+  </div>
+
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script>
+    // Firebase config (same as your other pages)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBI6RE0XN4i100uekxrydeBJEjch-JGpS0",
+      authDomain: "feedback-2fe47.firebaseapp.com",
+      databaseURL: "https://feedback-2fe47-default-rtdb.firebaseio.com",
+      projectId: "feedback-2fe47",
+      storageBucket: "feedback-2fe47.firebasestorage.app",
+      messagingSenderId: "702850691474",
+      appId: "1:702850691474:web:8cd63328cf676eb4ab914b",
+      measurementId: "G-46VHMM776Q"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // DOM refs
+    const fullName = document.getElementById('fullName');
+    const feedbackMsg = document.getElementById('feedbackMsg');
+    const charCounter = document.getElementById('charCounter');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusBox = document.getElementById('statusBox');
+
+    // Character counter (real time)
+    feedbackMsg.addEventListener('input', () => {
+      const len = feedbackMsg.value.length;
+      charCounter.textContent = `${len} / 600`;
+      charCounter.classList.toggle('warning', len > 500);
+    });
+
+    // Simple cooldown to avoid double submission
+    let cooldown = false;
+
+    // Show status message
+    function showStatus(message, type, icon = '') {
+      statusBox.innerHTML = icon ? `<span>${icon}</span> ${message}` : message;
+      statusBox.className = `status-box ${type}`;
+      statusBox.style.display = 'flex';
+      if (type === 'success') {
+        setTimeout(() => { statusBox.style.display = 'none'; }, 6000);
+      }
+    }
+
+    // Submit handler
+    submitBtn.addEventListener('click', async () => {
+      const name = fullName.value.trim();
+      const message = feedbackMsg.value.trim();
+
+      // Validation
+      if (!name) {
+        showStatus('Please enter your name.', 'error', '⚠️');
+        fullName.focus();
+        return;
+      }
+      if (!message) {
+        showStatus('Feedback / bug description cannot be empty.', 'error', '⚠️');
+        feedbackMsg.focus();
+        return;
+      }
+      if (message.length > 600) {
+        showStatus('Feedback is too long (max 600 characters).', 'error', '⚠️');
+        return;
+      }
+
+      if (cooldown) {
+        showStatus('Please wait a moment before submitting again.', 'error', '⏳');
+        return;
+      }
+
+      // Disable button & start cooldown
+      submitBtn.disabled = true;
+      cooldown = true;
+      statusBox.style.display = 'none';
+
+      try {
+        // Push feedback to Firebase (write‑only, no read)
+        await db.ref('feedbacks').push({
+          name: name,
+          message: message,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        // Success: reset form
+        fullName.value = '';
+        feedbackMsg.value = '';
+        charCounter.textContent = '0 / 600';
+        charCounter.classList.remove('warning');
+        showStatus('Thank you! Your feedback has been submitted.', 'success', '✅');
+      } catch (error) {
+        console.error('Submit error:', error);
+        showStatus('Something went wrong. Please try again later.', 'error', '❌');
+      } finally {
+        submitBtn.disabled = false;
+        setTimeout(() => { cooldown = false; }, 2500);
+      }
+    });
+  </script>
+</body>
+</html>
